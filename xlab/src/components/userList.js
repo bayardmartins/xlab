@@ -1,30 +1,24 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 
-import api from '../services/api';
+import jsonPlaceholder from '../services/jsonPlaceholder';
 import './styles.css';
 
 
 
-export function UserList(){
-
-    //TODO: Fazer chamada na API para carregar dados reais
-    const clientes = [
-        {idUsuario: 1, nomeUsuario: 'Cliente 1'},
-        {idUsuario: 2, nomeUsuario: 'Cliente 2'},
-        {idUsuario: 3, nomeUsuario: 'Cliente 3'},
-        {idUsuario: 4, nomeUsuario: 'Cliente 4'},
-        {idUsuario: 5, nomeUsuario: 'Cliente 5'},
-        {idUsuario: 6, nomeUsuario: 'Cliente 6'},
-        {idUsuario: 7, nomeUsuario: 'Cliente 7'},
-        {idUsuario: 8, nomeUsuario: 'Cliente 8'},
-    ]
-
+export function UserList() {
+    const [clientes, setClientes] = useState([]);
     const history = useHistory();
 
+    useEffect(() => {
+        jsonPlaceholder.get('users',{}).then(response => {
+                setClientes(response.data);
+        })
+    });
+
     function handleButton(cliente){
-        localStorage.setItem('nomeUsuario',cliente.nomeUsuario);
-        localStorage.setItem('idUsuario',cliente.idUsuario);
+        localStorage.setItem('nomeUsuario',cliente.name);
+        localStorage.setItem('idUsuario',cliente.id);
         history.push('./User/DebitList');
     }
 
@@ -33,11 +27,11 @@ export function UserList(){
             <ul>
                 {clientes.map(cliente =>(
                     <button className="button"
-                        key={cliente.idUsuario}
+                        key={cliente.id}
                         onClick={()=> handleButton(cliente)}
-                    >{cliente.nomeUsuario}</button>
+                    >{cliente.name}</button>
                 ))}
             </ul>
         </div>
-    )
+    );
 }

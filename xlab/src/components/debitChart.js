@@ -5,27 +5,27 @@ import api from '../services/api';
 import './styles.css';
 
 export function DebitChart(parms){
-    const id = parms.id;
+    const idDivida = parms.idDivida;
     const motivo = parms.motivo;
     const valor = parms.valor;
+    const uuid = process.env.REACT_APP_XLAB_API_KEY;
     
     const history = useHistory();
 
-    async function handleDelete(id){
+    async function handleDelete(){
         try{
             //Todo: Adicionar uuid,
-            await api.delete(`divida/${id}`, {
-                body: {
-                    
-                }
+            await api.delete(`divida/${idDivida}`, {
+                params: 
+                {uuid: uuid}
             });
         }catch(err){
             alert('Erro ao deletar dívida');
         }
     }
 
-    async function handleEdit(id){
-        localStorage.setItem('idDivida',id);
+    async function handleEdit(){
+        localStorage.setItem('idDivida',idDivida);
         history.push('../User/Debit',{params:{motivo:motivo, valor:valor}})
     }
 
@@ -39,8 +39,8 @@ export function DebitChart(parms){
                 <p>{valor}</p>
             </li>
 
-            <button className="button" onClick={() => handleEdit(id)}>Editar</button>
-            <button className="button" onClick={() => handleDelete(id)}>Deletar</button>
+            <button className="button-chart" onClick={() => handleEdit()}>Editar</button>
+            <button className="button-chart" onClick={() => handleDelete()}>Deletar</button>
         </div>
     )
 }
